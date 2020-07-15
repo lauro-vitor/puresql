@@ -1,4 +1,5 @@
 const getConnection = require('../connectionFactory');
+const hasOne = require('./relations/hasOne');
 const getPersonById = require('./getPersonById');
 
 const createPerson = person => {
@@ -22,10 +23,8 @@ const createPerson = person => {
                 if(error){
                     return reject(error);
                 }
-                if(results.affectedRows == 1){
-                    newPerson = await getPersonById(results.insertId);
-                    resolve(newPerson);
-                }
+                 newPerson = getPersonById(results.insertId);
+                resolve(newPerson);
             });
             connection.commit(error => {
                 if(error){

@@ -1,14 +1,26 @@
 const getConnection = require('../connectionFactory');
-const getUserById = require('../users/getUserById');
+const hasOne = require('./relations/hasOne');
 
 const getPersonById = id => {
     return new Promise((resolve, reject) => {
         const connection = getConnection();
-
         const sql = `
-            SELECT * 
-            FROM Persons 
-            WHERE Persons.id = ?`;
+            SELECT
+                p.id, 
+                p.name, 
+                p.isBetaMember, 
+                p.userId, 
+                p.createdAt as pCreatedAt, 
+                p.updatedAt as pUpdatedAt,
+                u.firstName,
+                u.lastName,
+                u.email,
+                u.createdAt as uCreatedAt,
+                u.updatedAt as uUpdatedAt
+            FROM Persons as p
+            JOIN Users as u
+            ON p.userId = u.id
+            WHERE p.id = ?`;
 
         connection.connect();
 
@@ -16,11 +28,10 @@ const getPersonById = id => {
             if(error){
                 return reject(error);
             }
-            if(results.length > 0) {
-                let user = await getUserById(results[0].userId);
-                let person = {... results[0]};
-                resolve({...person, user});
-            }
+
+            let person = hasOne(results[0]);
+            resolve(person);
+            
         });
         connection.end();
     });

@@ -9,13 +9,15 @@ const {
 } = require('./data/repository/persons/personProvider');
 
 const main = async () => {
-   
-    try{
-       await getAllPersons();
-       
-    }catch(error){
-        console.warn('in catch clasule!');
-        console.log(error);
-    }
+
+   try{
+       let persons = await getAllPersons();
+       persons.map(person => {
+           console.log(person);
+       })
+    //console.log(await getAllPersons());
+   }catch(error){
+        throw error;
+   }
 }
 main();
