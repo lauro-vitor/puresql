@@ -1,5 +1,4 @@
 const getConnection = require('../connectionFactory');
-const hasOne = require('./relations/hasOne');
 const getPersonById = require('./getPersonById');
 
 const createPerson = person => {
