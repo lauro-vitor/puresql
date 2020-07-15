@@ -1,9 +1,19 @@
 const getConnection = require('../connectionFactory');
 const hasOne = require('./relations/hasOne');
 
-const getAllPersons = () => {
+const getAllPersons = async () => {
+    try {
+        return await getAll();
+    } catch (error) {
+        return error;
+    }
+}
+const getAll = () => {
+
     return new Promise((resolve, reject) => {
+
         const connection =  getConnection();
+
         const sql = `
             SELECT
                 p.id, 
@@ -25,23 +35,26 @@ const getAllPersons = () => {
 
         connection.connect();
 
-        connection.beginTransaction(error =>{
-            if(error){
+        connection.query(sql,  (error, results) => {
+
+            if(error) {
                 return reject(error);
             }
-            connection.query(sql,  (error, results) => {
-                if(error){
-                    return reject(error);
-                }
+
+            if(results.length > 0) {
+
                 results.map(result => {
                     let person = hasOne(result);
                     persons.push(person);
                 });
-                resolve(persons);
-            });
 
-            connection.end();
+                resolve(persons);
+            }
+           
         });
+        
+        connection.end();
+
     });
 }
 

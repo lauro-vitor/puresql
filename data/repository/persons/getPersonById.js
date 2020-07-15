@@ -1,9 +1,20 @@
 const getConnection = require('../connectionFactory');
 const hasOne = require('./relations/hasOne');
+const messageErrorPerson = require('./error/messageErrorPerson');
 
-const getPersonById = id => {
+const getPersonById =  async id => {
+    try {
+        return await getById(id);
+    } catch (error) {
+        return error;
+    }
+}
+
+const getById = id => {
     return new Promise((resolve, reject) => {
+
         const connection = getConnection();
+
         const sql = `
             SELECT
                 p.id, 
@@ -22,18 +33,37 @@ const getPersonById = id => {
             ON p.userId = u.id
             WHERE p.id = ?`;
 
+        let message =  '';
+
+        let res = null;
+
         connection.connect();
 
         connection.query(sql, id, async (error, results) => {
-            if(error){
-                return reject(error);
+
+            if(error) {
+                message = messageErrorPerson({...error});
+                res = response(null, message);
+                return reject(res);
             }
 
-            let person = hasOne(results[0]);
-            resolve(person);
+            if(results.length > 0 ) {
+                res = response(hasOne(results[0]),'success!');
+            } else {
+                res = response(null, 'BAD');
+            }
+            
+            resolve(res);
             
         });
+
         connection.end();
     });
+}
+const response = (person, message) => {
+    return {
+        person,
+        message
+    }
 }
 module.exports = getPersonById;

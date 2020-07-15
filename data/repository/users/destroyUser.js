@@ -1,13 +1,22 @@
 const getConnection = require('../connectionFactory');
-//return a boolean value
-const destroyUser = id => {
+const messageErrorUser = require('./error/messageErrorUser');
+
+const destroyUser = async id  => {
+    try {
+        return await destroy(id);
+    } catch (error) {
+        return error;
+    }
+}
+
+const destroy = id => {
 
     return new Promise((resolve, reject) => {
        const connection = getConnection();
 
        const sql = `DELETE FROM Users WHERE id = ?`;
 
-       let deleted = false;
+       let message = '';
 
        connection.connect();
 
@@ -20,11 +29,18 @@ const destroyUser = id => {
            connection.query(sql, id, (error, results) => {
                 if(error) {
                     return connection.rollback(() => {
-                        return reject(error);
+                       message = messageErrorUser({... error});
+                       res = response(false, message);
+                       reject(res);
                     });
                 }
-                deleted = (results.affectedRows == 1) ? true : false;
-                resolve(deleted);
+                if (results.affectedRows == 1) {
+                    res = response(true, 'success!');
+                    resolve(res);
+                    return;
+                }
+                resolve(response(false, 'Fail'));
+
             });
 
             connection.commit(error  => {
@@ -35,5 +51,11 @@ const destroyUser = id => {
             connection.end();
        });
     });
+}
+const response = (deleted, message) => {
+    return {
+        deleted,
+        message,
+    }
 }
 module.exports = destroyUser;

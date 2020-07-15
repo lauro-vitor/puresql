@@ -1,6 +1,16 @@
 const getConnection = require('../connectionFactory');
 const getUserById = require('./getUserById');
-const createUser = user => {
+const messageErrorUser = require('./error/messageErrorUser');
+
+const createUser = async user => {
+    try {
+        return await create(user);
+    } catch (error) {
+        return error;
+    }
+}
+
+const create = user => {    
     return new Promise( (resolve, reject) => {
         
         const connection =  getConnection();
@@ -10,7 +20,9 @@ const createUser = user => {
             VALUES (?, ?, ?, now(), now())`;
 
         let inserts = [user.firstName, user.lastName, user.email];
-        let newUser = null;
+
+        let message = '';
+        let res = '';
 
         connection.beginTransaction(error => {
             
@@ -20,13 +32,16 @@ const createUser = user => {
             connection.query(sql, inserts, async (error, results) => {
                 if(error){
                    return connection.rollback(() => {
-                        reject(error);
+                        message = messageErrorUser({... error});
+                        res = response(null, message);
+                        reject(res);
                     });
                 }
 
                 if(results.affectedRows == 1){
-                    newUser = await getUserById(results.insertId);
-                    resolve(newUser);
+                    let {user} = await getUserById(results.insertId);
+                    res = response(user, 'Usuário adicionado!');
+                    resolve(res);
                 }
             });
             
@@ -41,5 +56,11 @@ const createUser = user => {
             connection.end();
         });
     });
+}
+const response = (user, message) => {
+    return {
+        user,
+        message
+    }
 }
 module.exports = createUser;
