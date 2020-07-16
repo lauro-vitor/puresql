@@ -5,4 +5,4 @@ router.get('/', (req, res) => {
     res.send('request in  persosns');
 });
 
-module.exports = app => app.use('/persons', router);
+module.exports = app => app.use('/api/persons', router);
