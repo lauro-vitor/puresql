@@ -33,7 +33,10 @@ const getByid = id => {
             if(results.length > 0) {
                 res = response({...results[0]}, 'success!');
                 resolve(res);
+                return;
             }
+
+            resolve(response(null, 'usuário não existe!'));
 
         });
 

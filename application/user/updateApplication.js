@@ -8,6 +8,6 @@ const updateApplication = async (user, id) => {
         return await updateUser(user, id);
     }
     return responseValidateUser;
-}
+}   
 
 module.exports = updateApplication;

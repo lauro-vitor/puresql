@@ -51,7 +51,9 @@ const update = (user, id) => {
                     let {user} = await getUserById(id);
                     res = response(user, 'Usuário atualizado com sucesso!');
                     resolve(res);
+                    return;
                 }
+                resolve(response(null,'Não foi possível atualizar usuário!'));
             });
 
             connection.commit(error => {
