@@ -1,14 +1,11 @@
+const express = require('express');
+const router = express.Router();
+const {showAllUsers} = require('../controllers/users');
 
-module.exports = app => {
-    const any1 = () => {
-        console.log("i am any1");
-    }
-    const any2 = () => {
-        console.log('i am any 2');
-    }
-    return([
-        any1,
-        any2
-    ]);
-}
-module.exports = {};
+router.get('/', async (req, res) => {
+    res.json(await showAllUsers());
+});
+router.get('/:id', (req, res) => {
+    res.send('oi você fez uma request get user/id')
+});
+module.exports = app => app.use('/users', router);
