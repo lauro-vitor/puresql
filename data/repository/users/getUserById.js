@@ -23,7 +23,7 @@ const getByid = id => {
         connection.connect();
 
         connection.query(sql, id, (error, results) => {
-            //testar com null
+            
             if(error) {
                 message = messageErrorUser({... error});
                

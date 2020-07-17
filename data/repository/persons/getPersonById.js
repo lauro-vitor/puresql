@@ -1,5 +1,5 @@
 const getConnection = require('../connectionFactory');
-const hasOne = require('./relations/hasOne');
+const hasOne = require('./relations/hasOne');   
 const messageErrorPerson = require('./error/messageErrorPerson');
 const response = require('../../../utils/response');
 
@@ -50,7 +50,7 @@ const getById = id => {
                 resolve(response(false, {person:hasOne(results[0])}, 'success!'));
                 return;
             }
-            resolve(response(false, null, 'Person não existe!'));
+            resolve(response(true, null, 'Person não existe!'));
             
         });
 
