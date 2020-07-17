@@ -1,12 +1,12 @@
-const showAllController = require('./showAllController');
-const showController = require('./showController');
-const storeController = require('./storeController');
-const updateController = require('./updateController');
-const destroyController = require('./destroyController');
+const showAllControllerUser = require('./showAllController');
+const showControllerUser = require('./showController');
+const storeControllerUser = require('./storeController');
+const updateControllerUser = require('./updateController');
+const destroyControllerUser = require('./destroyController');
 module.exports = {
-    showAllController , 
-    showController,
-    storeController,
-    updateController,
-    destroyController
+    showAllControllerUser , 
+    showControllerUser,
+    storeControllerUser,
+    updateControllerUser,
+    destroyControllerUser
 };    

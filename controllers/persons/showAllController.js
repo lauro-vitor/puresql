@@ -1,6 +1,6 @@
-const {showAllApplication} = require('../../application/persons');
+const {showAllApplicationPersons} = require('../../application/persons');
 
 const showAllController = async () => {
-    return await showAllApplication();
+    return await showAllApplicationPersons();
 }
 module.exports = showAllController;

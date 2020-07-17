@@ -1,13 +1,13 @@
-const showAllApplication = require('./showAllApplication');
-const showApplication = require('./showApplication');
-const storeApplication = require('./storeApplication');
-const updateApplication = require('./updateApplication');
-const destroyApplication = require('./destroyApplication');
+const showAllApplicationPersons = require('./showAllApplication');
+const showApplicationPersons = require('./showApplication');
+const storeApplicationPersons = require('./storeApplication');
+const updateApplicationPersons = require('./updateApplication');
+const destroyApplicationPersons = require('./destroyApplication');
 
 module.exports = {
-    showAllApplication,
-    showApplication,
-    storeApplication,
-    updateApplication,
-    destroyApplication
+    showAllApplicationPersons,
+    showApplicationPersons,
+    storeApplicationPersons,
+    updateApplicationPersons,
+    destroyApplicationPersons
 };

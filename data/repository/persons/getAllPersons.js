@@ -1,5 +1,7 @@
 const getConnection = require('../connectionFactory');
 const hasOne = require('./relations/hasOne');
+const response = require('../../../utils/response');
+const messageErrorPerson = require('./error/messageErrorPerson');
 
 const getAllPersons = async () => {
     try {
@@ -32,13 +34,15 @@ const getAll = () => {
             ON p.userId = u.id`;
 
         let persons = [];
+        let message = '';
 
         connection.connect();
 
         connection.query(sql,  (error, results) => {
 
             if(error) {
-                return reject(error);
+                message = messageErrorPerson({... error});
+                return reject(response(true, null, message));
             }
 
             if(results.length > 0) {
@@ -48,9 +52,10 @@ const getAll = () => {
                     persons.push(person);
                 });
 
-                resolve(persons);
+                resolve(response(false, {persons:persons}, 'sucess!'));
+                return;
             }
-           
+            resolve(response(true, null, 'não possui Persons registradas!'));
         });
         
         connection.end();

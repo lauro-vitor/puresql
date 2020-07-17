@@ -1,6 +1,7 @@
 const getConnection = require('../connectionFactory');
 const hasOne = require('./relations/hasOne');
 const messageErrorPerson = require('./error/messageErrorPerson');
+const response = require('../../../utils/response');
 
 const getPersonById =  async id => {
     try {
@@ -35,7 +36,6 @@ const getById = id => {
 
         let message =  '';
 
-        let res = null;
 
         connection.connect();
 
@@ -43,27 +43,19 @@ const getById = id => {
 
             if(error) {
                 message = messageErrorPerson({...error});
-                res = response(null, message);
-                return reject(res);
+                return reject(response(true, null, message));
             }
 
             if(results.length > 0 ) {
-                res = response(hasOne(results[0]),'success!');
-            } else {
-                res = response(null, 'BAD');
+                resolve(response(false, {person:hasOne(results[0])}, 'success!'));
+                return;
             }
-            
-            resolve(res);
+            resolve(response(false, null, 'Person não existe!'));
             
         });
 
         connection.end();
     });
 }
-const response = (person, message) => {
-    return {
-        person,
-        message
-    }
-}
+
 module.exports = getPersonById;

@@ -1,4 +1,4 @@
-const validateName = require('./validateName');
+const validateName = require('../../utils/validateName');
 const validateEmail = require('./validateEmail');
 
 const validateUser = user => {
@@ -7,7 +7,7 @@ const validateUser = user => {
    let responseValidationEmail = validateEmail(user.email);
    let error = false;
    let messages = [];
-
+ 
    if( responseValidationName.error ) {
        error = true;
        messages.push(responseValidationName.message);
@@ -22,6 +22,7 @@ const validateUser = user => {
    }
    return {
        error,
+       data: null,
        messages,
    }
 }

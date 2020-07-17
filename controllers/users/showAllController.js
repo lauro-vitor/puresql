@@ -1,6 +1,6 @@
-const {showAllApplication} = require('../../application/user');
+const {showAllApplicationUser} = require('../../application/user');
 
-const showAllController = async () => {
-    return await showAllApplication();
+const showAllControllerUser = async () => {
+    return await showAllApplicationUser();
 }
-module.exports = showAllController;  
+module.exports = showAllControllerUser;  

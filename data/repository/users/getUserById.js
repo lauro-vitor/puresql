@@ -1,5 +1,6 @@
 const getConnection = require('../connectionFactory');
 const messageErrorUser = require('./error/messageErrorUser');
+const response = require('../../../utils/response');
 
 const getUserById = async id => {
     try {
@@ -18,35 +19,29 @@ const getByid = id => {
         const sql = 'SELECT * FROM Users WHERE id = ?';
 
         let message = '';
-        let res = null;
 
         connection.connect();
 
         connection.query(sql, id, (error, results) => {
-
+            //testar com null
             if(error) {
                 message = messageErrorUser({... error});
-                res = response(null, message);
-                return reject(res);
+               
+                return reject(response(true, null, message));
             }
 
             if(results.length > 0) {
-                res = response({...results[0]}, 'success!');
-                resolve(res);
+                resolve(response(false,  {user:{...results[0]}}, 'success!'));
                 return;
             }
-
-            resolve(response(null, 'usuário não existe!'));
+            
+            resolve(response(true, null, 'Usuário não exsite!'));
 
         });
 
         connection.end();
     });
 }
-const response = (user, message) => {
-    return {
-        user,
-        message
-    }
-}
+
+
 module.exports = getUserById;

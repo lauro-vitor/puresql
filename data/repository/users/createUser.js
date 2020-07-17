@@ -1,6 +1,7 @@
 const getConnection = require('../connectionFactory');
 const getUserById = require('./getUserById');
 const messageErrorUser = require('./error/messageErrorUser');
+const response = require('../../../utils/response');
 
 const createUser = async user => {
     try {
@@ -22,7 +23,6 @@ const create = user => {
         let inserts = [user.firstName, user.lastName, user.email];
 
         let message = '';
-        let res = '';
 
         connection.beginTransaction(error => {
             
@@ -33,15 +33,13 @@ const create = user => {
                 if(error){
                    return connection.rollback(() => {
                         message = messageErrorUser({... error});
-                        res = response(null, message);
-                        reject(res);
+                        reject(response(true, null, message));
                     });
                 }
 
                 if(results.affectedRows == 1){
-                    let {user} = await getUserById(results.insertId);
-                    res = response(user, 'Usuário adicionado!');
-                    resolve(res);
+                    let {data} = await getUserById(results.insertId);
+                    resolve(response(false, {user:data.user}, 'Usuário adicionado!'));
                 }
             });
             
@@ -57,10 +55,5 @@ const create = user => {
         });
     });
 }
-const response = (user, message) => {
-    return {
-        user,
-        message
-    }
-}
+
 module.exports = createUser;

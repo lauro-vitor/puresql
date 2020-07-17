@@ -1,7 +1,7 @@
 const validateUser = require('../../services/user');
 const {createUser} = require('../../data/repository/users');
 
-const storeApplication =  async user => {
+const storeApplicationUser =  async user => {
     let responseValidateUser = validateUser(user);
 
     if(!responseValidateUser.error) {
@@ -10,4 +10,4 @@ const storeApplication =  async user => {
     return responseValidateUser;
 }
 
-module.exports = storeApplication;
+module.exports = storeApplicationUser;

@@ -1,6 +1,6 @@
-const {storeApplication} = require('../../application/user');
+const {storeApplicationUser} = require('../../application/user');
 
-const storeController = async user => {
-    return await storeApplication(user);
+const storeControllerUser = async user => {
+    return await storeApplicationUser(user);
 }
-module.exports = storeController;
+module.exports = storeControllerUser;

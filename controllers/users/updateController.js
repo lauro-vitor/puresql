@@ -1,6 +1,6 @@
-const {updateApplication} = require('../../application/user');
+const {updateApplicationUser} = require('../../application/user');
 
-const updateController = async (user, id) => {
-    return await updateApplication(user, id);
+const updateControllerUser = async (user, id) => {
+    return await updateApplicationUser(user, id);
 }
-module.exports = updateController;
+module.exports = updateControllerUser;

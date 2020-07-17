@@ -1,7 +1,7 @@
 const {getAllPersons} = require('../../data/repository/persons');
 
-const showAllApplication = async () => {
+const showAllApplicationPersons = async () => {
     return await getAllPersons();
 }
 
-module.exports = showAllApplication;
+module.exports = showAllApplicationPersons;

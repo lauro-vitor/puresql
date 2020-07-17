@@ -1,11 +1,11 @@
 const validateName = name => {
     
     if(!name ) {
-        return response(true, 'nome ou sobrenome vazio!');
+        return response(true, 'nome ou sobrenome não existe!');
     }
 
-    if(!name.length > 3) {
-        return response(true, 'nome deve possuir mais de 3 caracteres!');
+    if(name.length < 3) {
+        return response(true, 'nome deve possuir  3 ou mais caracteres!');
     }
     
     return response(false, 'sucess!');

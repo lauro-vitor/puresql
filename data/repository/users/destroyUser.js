@@ -1,5 +1,6 @@
 const getConnection = require('../connectionFactory');
 const messageErrorUser = require('./error/messageErrorUser');
+const response = require('../../../utils/response');
 
 const destroyUser = async id  => {
     try {
@@ -30,16 +31,14 @@ const destroy = id => {
                 if(error) {
                     return connection.rollback(() => {
                        message = messageErrorUser({... error});
-                       res = response(false, message);
-                       reject(res);
+                       reject(response(true, null, message));
                     });
                 }
                 if (results.affectedRows == 1) {
-                    res = response(true, 'success!');
-                    resolve(res);
+                    resolve(response(false, null,'success!'));
                     return;
                 }
-                resolve(response(false, 'Fail'));
+                resolve(response(true, null,'falha ao excluir usuário!'));
 
             });
 
@@ -52,10 +51,5 @@ const destroy = id => {
        });
     });
 }
-const response = (deleted, message) => {
-    return {
-        deleted,
-        message,
-    }
-}
+
 module.exports = destroyUser;

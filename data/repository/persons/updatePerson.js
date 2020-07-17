@@ -1,6 +1,7 @@
 const getConnection = require('../connectionFactory');
 const getPersonById = require('./getPersonById');
 const messageErrorPerson = require('./error/messageErrorPerson');
+const response = require('../../../utils/response');
 
 const updatePerson = async (person, id) => {
     try {
@@ -28,22 +29,20 @@ const update = (person, id) => {
         
         connection.beginTransaction(error => {
             if(error) {
-                return  reject(error);
+                return  reject(response(true, null, {...error}));
             }
 
             connection.query(sql, inserts, async (error, results) =>{
                 if(error){
                     return connection.rollback(() => {
                         message =  messageErrorPerson({... error});
-                        res = response(null, message);
-                        reject(res);
+                        reject(response(true, null, message));
                     });
                 }
 
-                if(results.changedRows == 1){
-                    let {person} = await getPersonById(id);
-                    res = response(person, 'Person Alterado com sucessso!');
-                    resolve(res);
+                if(results.changedRows == 1) {
+                    let {data} = await getPersonById(id);
+                    resolve(response(false, data.person, 'Person Alterado com sucessso!'));
                 }
                
             });
@@ -51,7 +50,7 @@ const update = (person, id) => {
             connection.commit(error =>{
                 if(error) {
                     return connection.rollback(()=> {
-                        reject(error);
+                        reject(response(true, null, {... error}));
                     });
                 }
             });
@@ -59,10 +58,5 @@ const update = (person, id) => {
         });
     });
 }
-const response = (person, message) => {
-    return({
-        person,
-        message,
-    });
-}
+
 module.exports = updatePerson;

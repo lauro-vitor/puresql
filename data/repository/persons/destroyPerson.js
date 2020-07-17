@@ -1,6 +1,7 @@
 
 const getConnection = require('../connectionFactory');
 const messageErrorPerson = require('./error/messageErrorPerson');
+const response = require('../../../utils/response');
 
 const destroyPerson = async id => {
     try {
@@ -20,38 +21,32 @@ const destroy = id => {
 
         let message =  '';
 
-        let res = null;
-
         connection.connect();
 
         connection.beginTransaction(error => {
 
             if(error) {
-                return reject(error);
+                return reject(response(true, null, {... error}));
             }
 
             connection.query(sql, id, (error, results) => {
                 if(error) {
                    return connection.rollback( () => {
                         message = messageErrorPerson({... error});
-                        res = response(message, false);
-                        reject(res);
+                        reject(response(true, null, message));
                    });
                 }
 
                 if(results.affectedRows == 1) {
-                    res = response('Person excluído com sucesso!', true);
-                    resolve(res);
-                } else {
-                    res = response('Person não existe!', false);
-                    resolve(res);
-                }
-
+                    resolve(response(false, null,'Person excluído com sucesso!' ));
+                    return;
+                } 
+                resolve(response(true, null,'Person não existe!'));
             });
 
             connection.commit(error =>{
                 if(error){
-                    return reject(error);
+                    return reject(response(true, null, {...error}));
                 }
             });
 
@@ -60,11 +55,5 @@ const destroy = id => {
     });
 }
 
-const response = (message, deleted) => {
-    return {
-        message,
-        deleted,
-    }
-}
 
 module.exports = destroyPerson;

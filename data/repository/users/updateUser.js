@@ -1,6 +1,7 @@
 const getConnection = require('../connectionFactory');
 const getUserById = require('./getUserById');
 const messageErrorUser = require('./error/messageErrorUser');
+const response = require('../../../utils/response');
 
 const updateUser = async (user, id) => {
     try {
@@ -43,17 +44,15 @@ const update = (user, id) => {
                 if(error) {
                     return connection.rollback(() => {
                         message = messageErrorUser({... error});
-                        res = response(null, message);
-                        reject(res);
+                        reject(response(true, null, message));
                     });
                 }
                 if(results.changedRows == 1) {
-                    let {user} = await getUserById(id);
-                    res = response(user, 'Usuário atualizado com sucesso!');
-                    resolve(res);
+                    let {data} = await getUserById(id);
+                    resolve(response(false, {user:data.user}, 'Usuário atualizado com sucesso!'));
                     return;
                 }
-                resolve(response(null,'Não foi possível atualizar usuário!'));
+                resolve(response(true, null,'Não foi possível atualizar usuário!'));
             });
 
             connection.commit(error => {
@@ -65,10 +64,5 @@ const update = (user, id) => {
         });
     });
 }
-const response = (user, message) => {
-    return {
-        user,
-        message
-    };
-}
+
 module.exports = updateUser;

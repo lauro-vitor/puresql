@@ -1,7 +1,7 @@
-const {destroyApplication} = require('../../application/user');
+const {destroyApplicationUser} = require('../../application/user');
 
-const destroyController = async id => {
-    return await destroyApplication(id);
+const destroyControllerUser = async id => {
+    return await destroyApplicationUser(id);
 }
 
-module.exports = destroyController;
+module.exports = destroyControllerUser;
